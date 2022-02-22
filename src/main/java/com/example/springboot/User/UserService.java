@@ -3,6 +3,7 @@ package com.example.springboot.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -23,7 +24,7 @@ public class UserService {
 
         return userRepository.findAll();
     }
-
+    @Transactional
     public List<User> removeUser(String email) {
         if (userRepository.findUserByEmail(email).isEmpty()) {
             throw new IllegalStateException("email already exist");
@@ -31,5 +32,25 @@ public class UserService {
         userRepository.deleteUserByEmail(email);
         return userRepository.findAll();
     }
+
+    public List<User> removeUserById(long userId) {
+        if (!userRepository.existsById(userId)){
+            throw new IllegalStateException("not found");
+        }
+        userRepository.deleteById(userId);
+        return userRepository.findAll();
     }
+    @Transactional
+    public void updateUser(User user, long userId) {
+        User updateUser = userRepository.getById(userId);
+        if (!user.getName().equals(updateUser.getName())){
+            updateUser.setName(user.getName());
+            updateUser.setEmail(user.getEmail());
+        }
+        else {
+            throw new IllegalStateException("Error user info update failed.");
+        }
+
+    }
+}
 

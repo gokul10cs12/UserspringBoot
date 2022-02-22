@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/user")
@@ -33,21 +33,25 @@ public class UserController {
     public List<User> deleteUser(@RequestBody User user){
        return userService.removeUser(user.getEmail());
     }
+
+    @DeleteMapping("/delete-user/{userId}")
+    public List<User> deleteUserById(
+            @PathVariable(required = true) long userId,
+            @RequestBody User user){
+        return userService.removeUserById(userId);
+    }
+
+    @PutMapping("/update-user/{userId}")
+    public void updateUser(
+            @RequestBody User user,
+            @PathVariable long userId){
+        userService.updateUser(user, userId);
+    }
+
     // Request param
     @GetMapping("/get-user-info")
     public String getUser(@RequestParam(name = "name") String name){
         return "the request param is "+ name;
-    }
-
-    //Path param
-    @GetMapping("/get-user-details/{name}")
-    public String getUserDetails(@PathVariable(required = false) String name ){
-        return "the path param working=" + name;
-    }
-
-    @GetMapping("/get-my-details/{name}")
-    public String getMyName(@PathVariable(required = false) String name){
-        return "my name is" + name;
     }
 
 

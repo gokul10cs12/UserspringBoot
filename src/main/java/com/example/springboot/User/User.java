@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 @Getter @Setter @NoArgsConstructor
 
 @Entity
-@Table
 public class User {
     @Id
     @SequenceGenerator(
